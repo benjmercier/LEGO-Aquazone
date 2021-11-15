@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using LEGOAquazone.Scripts.Player.Movement;
 
-namespace LEGOAquazone.Scripts.Controllers
+namespace LEGOAquazone.Scripts.Controllers.Propellers
 {
     [RequireComponent(typeof(Steering))]
-    public class PropellerControl : MonoBehaviour
+    public class PropellerController : MonoBehaviour
     {
         [SerializeField]
         private GameObject _leftPropeller,
@@ -22,14 +22,25 @@ namespace LEGOAquazone.Scripts.Controllers
         private float _moveDirection;
         private float _turnDirection;
 
+        private enum MoveDirection
+        {
+            Forward,
+            Backward,
+            InPlace
+        }
+
+        public Propeller[] propellers;
+
         private void OnEnable()
         {
-            Steering.onCurrentVelocity += SetDirection;
+            propellers = GetComponentsInChildren<Propeller>();
+
+            Steering.onGetPlayerCurrentVelocity += SetDirection;
         }
 
         private void OnDisable()
         {
-            Steering.onCurrentVelocity -= SetDirection;
+            Steering.onGetPlayerCurrentVelocity -= SetDirection;
         }
 
         // Update is called once per frame
@@ -38,7 +49,7 @@ namespace LEGOAquazone.Scripts.Controllers
             CalculatePropellerDirection(_moveDirection, _turnDirection);
         }
 
-        private void SetDirection(Vector3 currentVelocity)
+        private void SetDirection(Transform rootObj, Vector3 currentVelocity)
         {
             _turnDirection = currentVelocity.x;
             _moveDirection = currentVelocity.z;

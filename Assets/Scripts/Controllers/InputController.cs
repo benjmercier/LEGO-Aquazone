@@ -14,7 +14,7 @@ namespace LEGOAquazone.Scripts.Controllers
 
         private Vector3 _moveDirection;
 
-        private PropellerControl _propellerControl;
+        //private PropellerController _propellerControl;
 
         // Events
         public static Action<Vector3> onMoveInput;

@@ -34,7 +34,7 @@ namespace LEGOAquazone.Scripts.Player.Movement
 
         private float _throttleSpeed = 0.5f;
 
-        public static Action<Vector3> onCurrentVelocity;
+        public static Action<Transform, Vector3> onGetPlayerCurrentVelocity;
 
         private void Start()
         {
@@ -63,7 +63,7 @@ namespace LEGOAquazone.Scripts.Player.Movement
 
         private void Update()
         {
-            OnCurrentVelocity(_currentVelocity);
+            OnGetPlayerCurrentVelocity(this.transform, _currentVelocity);
         }
 
         private void CalculateSteering(Vector3 direction)
@@ -95,9 +95,9 @@ namespace LEGOAquazone.Scripts.Player.Movement
             
         }
 
-        private void OnCurrentVelocity(Vector3 currentVelocity)
+        private void OnGetPlayerCurrentVelocity(Transform rootObj, Vector3 currentVelocity)
         {
-            onCurrentVelocity?.Invoke(currentVelocity);
+            onGetPlayerCurrentVelocity?.Invoke(rootObj, currentVelocity);
         }
     }
 }
