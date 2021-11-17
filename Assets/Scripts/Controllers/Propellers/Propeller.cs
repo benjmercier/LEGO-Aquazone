@@ -20,6 +20,8 @@ namespace LEGOAquazone.Scripts.Controllers.Propellers
 
         public PropellerType propellerType;
 
+        private PropellerController _propellerController;
+
         private float _moveDirection;
         private float _turnDirection;
 
@@ -36,9 +38,14 @@ namespace LEGOAquazone.Scripts.Controllers.Propellers
                 _isPlayer = false;
             }
 
+            if (transform.parent.root.TryGetComponent(out PropellerController propellerController))
+            {
+                _propellerController = propellerController;
+            }
+
             if (_isPlayer)
             {
-                Steering.onGetPlayerCurrentVelocity += GetCurrentVelocity;
+                
             }
         }
 
@@ -46,16 +53,26 @@ namespace LEGOAquazone.Scripts.Controllers.Propellers
         {
             if (_isPlayer)
             {
-                Steering.onGetPlayerCurrentVelocity -= GetCurrentVelocity;
+               
             }
         }
 
-        private void GetCurrentVelocity(Transform rootObj, Vector3 currentVelocity)
+        /// <summary>
+        /// need to check if root game obj has propeller controller
+        /// if so, propeller added to list of active/available propellers
+        /// </summary>
+
+        private void Update()
         {
-            if (transform.parent.root == rootObj)
+            if (_propellerController != null)
             {
-                Debug.Log("Found the parent.");
-            }
+                //RotatePropeller();
+            }            
+        }
+
+        private void RotatePropeller()
+        {
+            gameObject.transform.rotation *= _propellerController.CalculateRotation(propellerType);
         }
     }
 }
