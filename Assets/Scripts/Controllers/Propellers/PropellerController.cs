@@ -22,12 +22,30 @@ namespace LEGOAquazone.Scripts.Controllers.Propellers
         private float _moveDirection;
         private float _turnDirection;
 
+        public enum PropellerType
+        {
+            RightRear,
+            LeftRear,
+            MiddleRear
+        }
+
         private enum MoveDirection
         {
             Forward,
             Backward,
             InPlace
         }
+
+        private MoveDirection _currentMoveDirection;
+
+        private enum TurnDirection
+        {
+            Right,
+            Left,
+            Straight
+        }
+
+        private TurnDirection _currentTurnDirection;
 
         public Propeller[] propellers;
 
@@ -55,85 +73,74 @@ namespace LEGOAquazone.Scripts.Controllers.Propellers
             _moveDirection = currentVelocity.z;
         }               
 
-        private void CalculatePropellerDirection(float moveDirection, float turnDirection)
+        public void CalculatePropellerDirection(float moveDirection, float turnDirection)
         {
             // if moveDirection > 0 = forward
             // positive rotation
             // else if < 0 = backward
             // negative rotation
+
+            //var moveDirection = _moveDirection;
+            //var turnDirection = _turnDirection;
             
             moveDirection *= _rotationMultiplier;
             _midPropeller.transform.rotation *= Quaternion.AngleAxis(moveDirection * Time.deltaTime, Vector3.forward);
 
+            /*
+            if (propellerType == PropellerType.MiddleRear)
+            {
+                return Quaternion.AngleAxis(moveDirection * Time.deltaTime, Vector3.forward);
+            }
+            */
+
             _leftTurn = moveDirection;
             _rightTurn = moveDirection;
 
+            SetMoveDirection(moveDirection);
+            SetTurnDirection(turnDirection);
 
-            //
-            CalculatePropellerRotation(moveDirection, turnDirection, ref _leftTurn);
-            CalculatePropellerRotation(moveDirection, turnDirection, ref _rightTurn);
-            //
-
-
-
-
-
-            if (moveDirection > 0) // moving forward
+            if (_currentMoveDirection == MoveDirection.Forward || _currentMoveDirection == MoveDirection.Backward)
             {
-                if (turnDirection > 0) // turn right
+                if (_currentTurnDirection == TurnDirection.Right)
                 {
-                    CalculatePropellerRotation(ref _rightTurn, ref _leftTurn);
+                    CalculatePropellerRotation(ref _rightTurn);
                 }
-                else if (turnDirection < 0) // turn left
+                else if (_currentTurnDirection == TurnDirection.Left)
                 {
-                    CalculatePropellerRotation(ref _leftTurn, ref _rightTurn);
-                }                
-            }
-            else if (moveDirection < 0) // moving backwards
-            {
-                if (turnDirection > 0) // turn right
-                {
-                    CalculatePropellerRotation(ref _rightTurn, ref _leftTurn, -1f, -1f);
-                }
-                else if (turnDirection < 0) // turn left
-                {
-                    CalculatePropellerRotation(ref _leftTurn, ref _rightTurn, -1f, -1f);
+                    CalculatePropellerRotation(ref _leftTurn);
                 }
             }
-            else // in place
+            else
             {
-                if (turnDirection > 0) // turn right
+                if (_currentTurnDirection == TurnDirection.Right)
                 {
                     CalculatePropellerRotation(turnDirection, ref _rightTurn, ref _leftTurn, -1f);
                 }
-                else if (turnDirection < 0) // turn left
+                else if (_currentTurnDirection == TurnDirection.Left)
                 {
                     CalculatePropellerRotation(turnDirection, ref _leftTurn, ref _rightTurn, -1f);
                 }
             }
 
+            /*
+            if (propellerType == PropellerType.RightRear)
+            {
+                return Quaternion.AngleAxis(_rightTurn * Time.deltaTime, Vector3.forward);
+            }
+            else
+            {
+                return Quaternion.AngleAxis(_leftTurn * Time.deltaTime, Vector3.forward);
+            }
+            */
             _rightPropeller.transform.rotation *= Quaternion.AngleAxis(_rightTurn * Time.deltaTime, Vector3.forward);
             _leftPropeller.transform.rotation *= Quaternion.AngleAxis(_leftTurn * Time.deltaTime, Vector3.forward);            
+
+
         }
 
-        private void CalculatePropellerRotation(float moveDirection, float turnDirection, ref float turn)
+        private void CalculatePropellerRotation(ref float turnTo)
         {
-            if (moveDirection < 0)
-            {
-                
-            }
-
-            if (turnDirection < 0)
-            {
-                
-            }
-            
-        }
-
-        private void CalculatePropellerRotation(ref float turnTo, ref float turnFrom, float toDirection = 1f, float fromDirection = 1f)
-        {
-            turnTo *= toDirection * 0.5f;
-            turnFrom *= fromDirection;
+            turnTo *= 0.5f;
         }
 
         private void CalculatePropellerRotation(float turnDirection, ref float turnTo, ref float turnFrom,  float toDirection = 1f, float fromDirection = 1f)
@@ -144,28 +151,36 @@ namespace LEGOAquazone.Scripts.Controllers.Propellers
             turnFrom = Mathf.Abs(turnDirection * _rotationMultiplier) * fromDirection;
         }
 
-        public Quaternion CalculateRotation(Propeller.PropellerType type)
+        private void SetMoveDirection(float moveDirection)
         {
-            var move = _moveDirection * _rotationMultiplier;
-
-            _rightTurn = move;
-            _leftTurn = move;            
-
-            if (type == Propeller.PropellerType.Middle)
+            if (moveDirection > 0)
             {
-                return Quaternion.AngleAxis(move * Time.deltaTime, Vector3.forward);
+                _currentMoveDirection = MoveDirection.Forward;
+            }
+            else if (moveDirection < 0)
+            {
+                _currentMoveDirection = MoveDirection.Backward;
             }
             else
             {
-
+                _currentMoveDirection = MoveDirection.InPlace;
             }
-
-
-            _moveDirection *= _rotationMultiplier;
-
-            float turn = _moveDirection;
-
-            return Quaternion.AngleAxis(turn * Time.deltaTime, Vector3.forward);
+        }
+        
+        private void SetTurnDirection(float turnDirection)
+        {
+            if (turnDirection > 0)
+            {
+                _currentTurnDirection = TurnDirection.Right;
+            }
+            else if (turnDirection < 0)
+            {
+                _currentTurnDirection = TurnDirection.Left;
+            }
+            else
+            {
+                _currentTurnDirection = TurnDirection.Straight;
+            }
         }
     }
 }

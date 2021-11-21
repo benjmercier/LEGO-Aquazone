@@ -89,6 +89,11 @@ namespace LEGOAquazone.Scripts.Player.Movement
             _appliedLinearForce = new Vector3(0f, _currentVelocity.y, _currentVelocity.z); //ApplyForce(new Vector3(0f, _pitch, _throttle), _linearForce);
             _appliedAngularForce = new Vector3(0f, _currentVelocity.x, 0f);
 
+            if (_currentVelocity.z < 0)
+            {
+                _appliedAngularForce *= -1f;
+            }
+
             _rigidbody.AddRelativeForce(_appliedLinearForce, ForceMode.Force);
             _rigidbody.AddRelativeTorque(_appliedAngularForce, ForceMode.Force);
 
