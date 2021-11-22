@@ -13503,6 +13503,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3407492407930839931}
+  - component: {fileID: 5748241369038045095}
   - component: {fileID: 4540002209391446793}
   - component: {fileID: 5056545380169758660}
   m_Layer: 0
@@ -13526,6 +13527,20 @@ Transform:
   m_Father: {fileID: 7272226870418050846}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5748241369038045095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2643340553810179524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1dffb9bce7a4434781b1788d5734eff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isPlayer: 0
+  _currentPropellerType: 0
 --- !u!33 &4540002209391446793
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -24172,6 +24187,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1048545493409930412}
+  - component: {fileID: 8777041716997684594}
   - component: {fileID: 3801751412910262854}
   - component: {fileID: 1468213646452590178}
   m_Layer: 0
@@ -24195,6 +24211,20 @@ Transform:
   m_Father: {fileID: 3942108579521143222}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8777041716997684594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4682140243647862716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1dffb9bce7a4434781b1788d5734eff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isPlayer: 0
+  _currentPropellerType: 1
 --- !u!33 &3801751412910262854
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -48003,7 +48033,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1dffb9bce7a4434781b1788d5734eff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  propellerType: 0
+  _isPlayer: 0
+  _currentPropellerType: 2
 --- !u!33 &7941278352324120987
 MeshFilter:
   m_ObjectHideFlags: 0

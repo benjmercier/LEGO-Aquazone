@@ -1990,6 +1990,10 @@ PrefabInstance:
       propertyPath: propellerType
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 113392090214870786, guid: 71fc4bb15300eef4e858b21b9d3e8c78, type: 3}
+      propertyPath: _currentPropellerType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6480468452913475370, guid: 71fc4bb15300eef4e858b21b9d3e8c78, type: 3}
       propertyPath: m_LocalPosition.x
       value: 79.99997

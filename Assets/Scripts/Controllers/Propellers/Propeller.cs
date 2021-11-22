@@ -13,14 +13,8 @@ namespace LEGOAquazone.Scripts.Controllers.Propellers
 
         [SerializeField]
         private PropellerController.PropellerType _currentPropellerType;
-        public PropellerController.PropellerType CurrentPropellerType { get { return _currentPropellerType; } }
 
         private PropellerController _propellerController;
-
-        private float _moveDirection;
-        private float _turnDirection;
-
-        private Func<Transform, Vector3> returnCurrentVelocity;
 
         private void OnEnable()
         {
@@ -37,26 +31,7 @@ namespace LEGOAquazone.Scripts.Controllers.Propellers
             {
                 _propellerController = propellerController;
             }
-
-            if (_isPlayer)
-            {
-                
-            }
         }
-
-        private void OnDisable()
-        {
-            if (_isPlayer)
-            {
-               
-            }
-        }
-
-        /// <summary>
-        /// need to check if root game obj has propeller controller
-        /// if so, propeller added to list of active/available propellers
-        /// </summary>
-        /// 
 
         // each propeller talks to propellerController at root of game object
         // passes in what type of propeller (right, left, mid)
@@ -66,15 +41,13 @@ namespace LEGOAquazone.Scripts.Controllers.Propellers
         {
             if (_propellerController != null)
             {
-                //RotatePropeller();
+                RotatePropeller();
             }            
         }
 
         private void RotatePropeller()
         {
-            //gameObject.transform.rotation *= _propellerController.CalculateRotation(_currentPropellerType);
-
-            //gameObject.transform.rotation *= _propellerController.CalculatePropellerDirection(_currentPropellerType);
+            gameObject.transform.rotation *= _propellerController.CalculateRotation(_currentPropellerType);
         }
     }
 }
