@@ -16,19 +16,29 @@ namespace LEGOAquazone.Scripts.Managers
         private List<GameObject> _activeAgents = new List<GameObject>();
 
         [SerializeField]
-        private Transform _flockOrigin;
+        private Transform _spawnOrigin;
 
         [SerializeField]
-        private Vector3 _flockArea = new Vector3(5f, 5f, 5f);
+        private Vector3 _spawnArea = new Vector3(5f, 5f, 5f);
+
+        [Header("Flock Settings")]
+        [SerializeField, Range(0.0f, 5.0f)]
+        private float _minSpeed;
+        [SerializeField, Range(0.0f, 5.0f)]
+        private float _maxSpeed;
+        [SerializeField, Range(0.5f, 10.0f)]
+        private float _neighborDistance;
+        [SerializeField, Range(0.0f, 5.0f)]
+        private float _rotationSpeed;
 
         private void Start()
         {
             for (int i = 0; i < _availableAgents; i++)
             {
-                Vector3 spawnPos = _flockOrigin.position + new Vector3(
-                    Random.Range(-_flockArea.x, _flockArea.x),
-                    Random.Range(-_flockArea.y, _flockArea.y),
-                    Random.Range(-_flockArea.z, _flockArea.z));
+                Vector3 spawnPos = _spawnOrigin.position + new Vector3(
+                    Random.Range(-_spawnArea.x, _spawnArea.x),
+                    Random.Range(-_spawnArea.y, _spawnArea.y),
+                    Random.Range(-_spawnArea.z, _spawnArea.z));
 
                 var agent = Instantiate(_agentPrefab, spawnPos, Quaternion.identity);
 
