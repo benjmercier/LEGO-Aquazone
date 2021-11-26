@@ -744,6 +744,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 599051287}
+  - component: {fileID: 599051288}
   m_Layer: 0
   m_Name: FishSpawnOrigin1
   m_TagString: Untagged
@@ -765,6 +766,25 @@ Transform:
   m_Father: {fileID: 1953859972}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &599051288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 599051286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 535d2bccbf0f26542a9d08da74162ce7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _agentPrefab: {fileID: 4414949823946964759, guid: 19c4e5443aea39f44ad0206441acd187, type: 3}
+  _flockBehavior: {fileID: 11400000, guid: eff50de342c724949aaab02cec41e2e0, type: 2}
+  _flockSize: 50
+  _driveFactor: 10
+  _maxSpeed: 5
+  _neighborRadius: 1.5
+  _avoidanceRadiusMultiplier: 0.5
 --- !u!1 &679260044
 GameObject:
   m_ObjectHideFlags: 0
@@ -1935,36 +1955,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 330387430428963409, guid: 19c4e5443aea39f44ad0206441acd187, type: 3}
-      propertyPath: _target
+      propertyPath: _spawnOrigin
       value: 
       objectReference: {fileID: 599051287}
-    - target: {fileID: 330387430428963409, guid: 19c4e5443aea39f44ad0206441acd187, type: 3}
-      propertyPath: _maxForce
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 330387430428963409, guid: 19c4e5443aea39f44ad0206441acd187, type: 3}
-      propertyPath: _maxSpeed
-      value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 330387430428963409, guid: 19c4e5443aea39f44ad0206441acd187, type: 3}
-      propertyPath: _target.x
-      value: -10
-      objectReference: {fileID: 0}
-    - target: {fileID: 330387430428963409, guid: 19c4e5443aea39f44ad0206441acd187, type: 3}
-      propertyPath: _target.y
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 330387430428963409, guid: 19c4e5443aea39f44ad0206441acd187, type: 3}
-      propertyPath: _target.z
-      value: -15
-      objectReference: {fileID: 0}
-    - target: {fileID: 330387430428963409, guid: 19c4e5443aea39f44ad0206441acd187, type: 3}
-      propertyPath: _calculateArrival
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2254864096537165402, guid: 19c4e5443aea39f44ad0206441acd187, type: 3}
       propertyPath: m_Name
       value: Fish_MediumAzure
+      objectReference: {fileID: 0}
+    - target: {fileID: 2254864096537165402, guid: 19c4e5443aea39f44ad0206441acd187, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2825756251336580673, guid: 19c4e5443aea39f44ad0206441acd187, type: 3}
       propertyPath: m_RootOrder

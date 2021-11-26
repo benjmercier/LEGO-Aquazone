@@ -20,7 +20,6 @@ namespace LEGOAquazone.Scripts.AI.Steering
 
         private Rigidbody _rigidbody;
 
-        [SerializeField]
         private Vector3 _target;
 
         [SerializeField]
@@ -29,11 +28,12 @@ namespace LEGOAquazone.Scripts.AI.Steering
         private float _approachRadius = 2.5f;
         private float _approachDistance;
 
-        [Header("Seek")]
+        [Header("Move Test")]
         [SerializeField]
-        private bool _useSeek = false;
-        [SerializeField]
-        private Seek _seek;
+        private Transform _spawnOrigin;
+        private Vector3 _circleCenter;
+        private float _circleRadius = 10f;
+        private Vector3 _randomTarget;
 
         private void Start()
         {
@@ -41,6 +41,16 @@ namespace LEGOAquazone.Scripts.AI.Steering
             {
                 _rigidbody = rigidbody;
             }
+        }
+
+        private void OnEnable()
+        {
+            _circleCenter = _spawnOrigin.position;
+
+            //GetNewTarget();
+            _target = new Vector3(5f, 5f, 5f);
+
+            Debug.Log(_target);
         }
 
         private void FixedUpdate()
@@ -57,9 +67,11 @@ namespace LEGOAquazone.Scripts.AI.Steering
             _approachDistance = _desiredVelocity.magnitude;
             _desiredVelocity.Normalize();
 
-            if (_calculateArrival && CheckDistanceToTarget())
+            if (_calculateArrival && TargetWithinApproachRadius())
             {
-                _desiredVelocity *= _approachDistance / _approachRadius * _maxSpeed;
+                //_desiredVelocity *= _approachDistance / _approachRadius * _maxSpeed;
+
+                GetNewTarget();
             }
             else
             {
@@ -81,7 +93,7 @@ namespace LEGOAquazone.Scripts.AI.Steering
             return CalculateSeek(target) * -1f;
         }
 
-        private bool CheckDistanceToTarget()
+        private bool TargetWithinApproachRadius()
         {
             return _approachDistance <= _approachRadius;
         }
@@ -98,6 +110,21 @@ namespace LEGOAquazone.Scripts.AI.Steering
             _rigidbody.AddRelativeForce(_appliedLinearForce, ForceMode.Force);
             _rigidbody.AddRelativeTorque(_appliedAngularForce, ForceMode.Force);
             */
+        }
+
+        private void GetNewTarget()
+        {
+            _target = GenerateRandomTarget();
+        }
+
+        private Vector3 GenerateRandomTarget()
+        {
+            //_randomTarget = _circleCenter + new Vector3(Random.insideUnitSphere.x, Random.insideUnitSphere.y, Random.insideUnitSphere.z);
+            //_randomTarget *= _circleRadius;
+
+            _randomTarget += new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), Random.Range(-5, 5));
+
+            return _randomTarget;
         }
     }
 }
