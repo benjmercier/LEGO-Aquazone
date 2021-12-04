@@ -13,7 +13,14 @@ namespace LEGOAquazone.Scripts.AI
         [SerializeField]
         private FlockAgent _flockAgent;
 
-        public static event Action<FlockAgent, FlockAgent, bool> onViewRadiusTriggered;
+        [SerializeField]
+        private float _agentFOV = 5f;
+
+        [SerializeField]
+        private AgentEyeSight[] _agentEyes;
+        public AgentEyeSight[] AgentEyes { get { return _agentEyes; } }
+
+        public static Action<FlockAgent, FlockAgent, bool> onViewRadiusTriggered;
 
         private void Awake()
         {
@@ -28,24 +35,44 @@ namespace LEGOAquazone.Scripts.AI
                     Debug.Log("ViewRadius::Awake()::FlockAgent is NULL on " + transform.root.name);
                 }
             }
+
+            _agentEyes = GetComponentsInChildren<AgentEyeSight>();
         }
 
         private void OnEnable()
         {
-            FlockAgent.onSetViewRadius += SetViewRadius;
+            SetViewRadius(_agentFOV);
+
+            FlockAgent.onUpdateAgentsInFOV += CheckFlockAgentInFOV;
         }
 
         private void OnDisable()
         {
-            FlockAgent.onSetViewRadius -= SetViewRadius;
+            FlockAgent.onUpdateAgentsInFOV -= CheckFlockAgentInFOV;
         }
 
-        private void SetViewRadius(GameObject parent, float agentFOV)
+        private void SetViewRadius(float agentFOV)
         {
-            if (this.transform.parent.gameObject == parent)
+            transform.localScale = Vector3.one;
+            transform.localScale *= agentFOV;
+        }                
+
+        private void OnTriggerEnter(Collider other)
+        {
+            CheckFlockAgentInRadius(other, true);
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            CheckFlockAgentInRadius(other, false);
+        }
+
+        private void CheckFlockAgentInRadius(Collider collider, bool isEntering)
+        {
+            if (collider.TryGetComponent(out IAgent<FlockAgent> flockAgent))
             {
-                transform.localScale = Vector3.one;
-                transform.localScale *= agentFOV;
+                // invoke event adding agent to list of agents in FOV
+                OnViewRadiusTriggered(flockAgent.Agent, isEntering);
             }
         }
 
@@ -54,22 +81,23 @@ namespace LEGOAquazone.Scripts.AI
             onViewRadiusTriggered?.Invoke(_flockAgent, neighborAgent, isEntering);
         }
 
-        private void OnTriggerEnter(Collider other)
+        private bool? CheckFlockAgentInFOV(FlockAgent parent, FlockAgent neighbor)
         {
-            CheckForFlockAgent(other, true);
-        }
-
-        private void OnTriggerExit(Collider other)
-        {
-            CheckForFlockAgent(other, false);
-        }
-
-        private void CheckForFlockAgent(Collider collider, bool isEntering)
-        {
-            if (collider.TryGetComponent(out IAgent<FlockAgent> flockAgent))
+            if (_flockAgent == parent)
             {
-                // invoke event adding agent to list of agents in FOV
-                OnViewRadiusTriggered(flockAgent.Agent, isEntering);
+                foreach (var eye in _agentEyes)
+                {
+                    if (eye.CheckIfInEyeFOV(neighbor.gameObject.transform.position))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            else
+            {
+                return null;
             }
         }
     }

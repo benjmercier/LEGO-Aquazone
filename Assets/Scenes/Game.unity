@@ -2218,6 +2218,14 @@ PrefabInstance:
       propertyPath: _spawnOrigin
       value: 
       objectReference: {fileID: 599051287}
+    - target: {fileID: 1111333420865019687, guid: 19c4e5443aea39f44ad0206441acd187, type: 3}
+      propertyPath: _maxFOV
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1111333420865019687, guid: 19c4e5443aea39f44ad0206441acd187, type: 3}
+      propertyPath: _eyeSide
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 2254864096537165402, guid: 19c4e5443aea39f44ad0206441acd187, type: 3}
       propertyPath: m_Name
       value: Fish_MediumAzure
@@ -2268,6 +2276,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2825756251336580673, guid: 19c4e5443aea39f44ad0206441acd187, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8528382570773766222, guid: 19c4e5443aea39f44ad0206441acd187, type: 3}
+      propertyPath: _maxFOV
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

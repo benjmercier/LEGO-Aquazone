@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using LEGOAquazone.Scripts.Interfaces;
 using LEGOAquazone.Scripts.AI;
@@ -13,12 +14,21 @@ namespace LEGOAquazone.Scripts.AI.Flocking
         public FlockAgent Agent { get { return this; } }
 
         private Vector3 _cohesionVector;
+        //[SerializeField]
+        //private float _agentFOV = 5f;
         [SerializeField]
-        private float _agentFOV = 5f;
+        private List<FlockAgent> _agentsInViewRadius = new List<FlockAgent>();
         [SerializeField]
         private List<FlockAgent> _agentsInFOV = new List<FlockAgent>();
 
-        public static event Action<GameObject, float> onSetViewRadius;
+        //private Vector3 _targetVector;
+        //private float _dotAngle;
+        //[SerializeField, Tooltip("1 = directly in front, -1 = directly behind")]
+        //private float _angleOffset = -0.75f;
+
+
+        public static Func<FlockAgent, FlockAgent, bool?> onUpdateAgentsInFOV;
+
 
         [Header("Test")]
         public Renderer _renderer;
@@ -42,30 +52,18 @@ namespace LEGOAquazone.Scripts.AI.Flocking
 
         private void Start()
         {
-            OnSetViewRadius(_agentFOV);
+            
         }
 
         private void Update()
         {
-            
-        }
+            //CalculateAgentsInFOV();
 
-        private void OnSetViewRadius(float agentFOV)
-        {
-            /*
-            var view = transform.GetComponentInChildren<ViewRadius>();
-            if (view != null)
-            {
-                view.gameObject.transform.localScale = new Vector3(agentFOV, agentFOV, agentFOV);
-            }*/
-
-            onSetViewRadius?.Invoke(this.gameObject, agentFOV);
+            UpdateAgentsInFOV();
         }
 
         private void MoveAgent()
         {
-            CalculateAgentsInFOV();
-
             _cohesionVector = CalculateCohesion();
         }
 
@@ -75,44 +73,102 @@ namespace LEGOAquazone.Scripts.AI.Flocking
             {
                 if (inRange)
                 {                    
-                    _agentsInFOV.Add(neighborAgent);
+                    _agentsInViewRadius.Add(neighborAgent);
                 }
                 else
                 {
-                    _agentsInFOV.Remove(neighborAgent);
+                    _agentsInViewRadius.Remove(neighborAgent);
+                    if (_agentsInFOV.Contains(neighborAgent))
+                    {
+                        _agentsInFOV.Remove(neighborAgent);
+                    }
                 }
             }
         }
 
+        private void UpdateAgentsInFOV()
+        {
+            if (_agentsInViewRadius.Count > 0)
+            {
+                AgentEyeSight[] eyes = gameObject.GetComponentsInChildren<AgentEyeSight>();
+
+                foreach (var agent in _agentsInViewRadius)
+                {
+                    if (eyes.Any(e => e.CheckIfInEyeFOV(agent.gameObject.transform.position)))
+                    {
+                        if (!_agentsInFOV.Contains(agent))
+                        {
+                            _agentsInFOV.Add(agent);
+                        }
+                    }
+                    else
+                    {
+                        if (_agentsInFOV.Contains(agent))
+                        {
+                            _agentsInFOV.Remove(agent);
+                        }
+                    }
+
+
+                    /*
+                    if (OnUpdateAgentsInFOV(agent) == true)
+                    {
+                        if (!_agentsInFOV.Contains(agent))
+                        {
+                            _agentsInFOV.Add(agent);
+                        }
+                    }
+                    else if (OnUpdateAgentsInFOV(agent) == false)
+                    {
+                        if (_agentsInFOV.Contains(agent))
+                        {
+                            _agentsInFOV.Remove(agent);
+                        }
+                    }*/
+                }
+            }
+        }
+
+        // check agents in range via radius
+        // if in range, add to _agentsInViewRadius
+        // if _agentsInViewRadius > 0
+        //   check each agent to see if in FOV
+        //   if in FOV
+        //      add to _agentsInFOV
+
+        // talk to ViewRadius
+        // get back agents in FOV via AgentEyeSight
+        private bool? OnUpdateAgentsInFOV(FlockAgent agent)
+        {
+            return onUpdateAgentsInFOV?.Invoke(this, agent);
+        }
+
+
+       
+
+        /*
         private void CalculateAgentsInFOV()
         {
-            if (_agentsInFOV.Count > 0)
+            if (_agentsInViewRadius.Count > 0)
             {
-                foreach (var agent in _agentsInFOV)
+                foreach (var agent in _agentsInViewRadius)
                 {
-                    if (CheckAgentPos(agent.transform.position))
+                    if (CheckNeighborPos(agent.transform.position))
                     {
                         agent._renderer.material.color = Color.red;
+
+                        if (!_agentsInFOV.Contains(agent))
+                            _agentsInFOV.Add(agent);
                     }
                     else
                     {
                         agent._renderer.material.color = agent._color;
+                        if (_agentsInFOV.Contains(agent))
+                            _agentsInFOV.Remove(agent);
                     }
                 }
             }
-        }
-
-        private bool CheckAgentPos(Vector3 agentPos)
-        {
-            var targetVector = agentPos - transform.position;
-
-            float dotAngle = Vector3.Dot(targetVector.normalized, transform.forward);
-
-            // -1 = directly behind, 1 = directly in front
-            float angleOffset = -0.75f;
-
-            return dotAngle > angleOffset;
-        }
+        }*/
 
         private Vector3 CalculateCohesion()
         {

@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace LEGOAquazone.Scripts.Interfaces
 {
-    public interface IAgent<T>
+    public interface ISeeable
     {
-        T Agent { get; }
+        
     }
 }
 
