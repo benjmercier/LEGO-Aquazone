@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using LEGOAquazone.Scripts.AI.Flocking;
 using LEGOAquazone.Scripts.Interfaces;
@@ -18,9 +19,13 @@ namespace LEGOAquazone.Scripts.AI
 
         [SerializeField]
         private AgentEyeSight[] _agentEyes;
-        public AgentEyeSight[] AgentEyes { get { return _agentEyes; } }
 
-        public static Action<FlockAgent, FlockAgent, bool> onViewRadiusTriggered;
+        [SerializeField]
+        private List<FlockAgent> _agentsInViewRadius = new List<FlockAgent>();
+        [SerializeField]
+        private List<FlockAgent> _agentsInFOV = new List<FlockAgent>();
+
+        public static event Action<FlockAgent, List<FlockAgent>> onSetAgentsInFOV;
 
         private void Awake()
         {
@@ -42,13 +47,11 @@ namespace LEGOAquazone.Scripts.AI
         private void OnEnable()
         {
             SetViewRadius(_agentFOV);
-
-            FlockAgent.onUpdateAgentsInFOV += CheckFlockAgentInFOV;
         }
 
-        private void OnDisable()
+        private void Update()
         {
-            FlockAgent.onUpdateAgentsInFOV -= CheckFlockAgentInFOV;
+            CheckFlockAgentsInFOV();
         }
 
         private void SetViewRadius(float agentFOV)
@@ -59,46 +62,92 @@ namespace LEGOAquazone.Scripts.AI
 
         private void OnTriggerEnter(Collider other)
         {
-            CheckFlockAgentInRadius(other, true);
+            CheckForFlockAgentInRadius(other, true);
         }
 
         private void OnTriggerExit(Collider other)
         {
-            CheckFlockAgentInRadius(other, false);
+            CheckForFlockAgentInRadius(other, false);
         }
 
-        private void CheckFlockAgentInRadius(Collider collider, bool isEntering)
+        private void CheckForFlockAgentInRadius(Collider collider, bool isEntering)
         {
             if (collider.TryGetComponent(out IAgent<FlockAgent> flockAgent))
             {
-                // invoke event adding agent to list of agents in FOV
-                OnViewRadiusTriggered(flockAgent.Agent, isEntering);
+                UpdateAgentsInRadius(flockAgent.Agent, isEntering);
             }
         }
 
-        private void OnViewRadiusTriggered(FlockAgent neighborAgent, bool isEntering)
+        private void UpdateAgentsInRadius(FlockAgent flockAgent, bool inRadius)
         {
-            onViewRadiusTriggered?.Invoke(_flockAgent, neighborAgent, isEntering);
-        }
-
-        private bool? CheckFlockAgentInFOV(FlockAgent parent, FlockAgent neighbor)
-        {
-            if (_flockAgent == parent)
+            if (inRadius)
             {
-                foreach (var eye in _agentEyes)
-                {
-                    if (eye.CheckIfInEyeFOV(neighbor.gameObject.transform.position))
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
+                _agentsInViewRadius.Add(flockAgent);
             }
             else
             {
-                return null;
+                _agentsInViewRadius.Remove(flockAgent);
+
+                ModifyAgentsInFOV(flockAgent, false);
             }
+        }
+
+        private void CheckFlockAgentsInFOV()
+        {
+            if (_agentsInViewRadius.Any())
+            {
+                _agentsInViewRadius.ForEach(agent =>
+                {
+                    if (_agentEyes.Any(eye => eye.CheckIfInEyeFOV(agent.transform.position)))
+                    {
+                        ModifyAgentsInFOV(agent, true);
+                    }
+                    else
+                    {
+                        ModifyAgentsInFOV(agent, false);
+                    }
+                });
+            }
+
+            //if (_agentsInViewRadius.Count > 0)
+            //{
+            //    foreach (var agent in _agentsInViewRadius)
+            //    {
+            //        if (_agentEyes.Any(eye => eye.CheckIfInEyeFOV(agent.transform.position)))
+            //        {
+            //            ModifyAgentsInFOV(agent, true);
+            //        }
+            //        else
+            //        {
+            //            ModifyAgentsInFOV(agent, false);
+            //        }
+            //    }
+            //}
+        }
+
+        private void ModifyAgentsInFOV(FlockAgent agent, bool addToList)
+        {
+            if (addToList)
+            {
+                if (!_agentsInFOV.Contains(agent))
+                {
+                    _agentsInFOV.Add(agent);
+                }
+            }
+            else
+            {
+                if (_agentsInFOV.Contains(agent))
+                {
+                    _agentsInFOV.Remove(agent);
+                }
+            }
+
+            OnSetAgentsInFOV(_flockAgent, _agentsInFOV);
+        }
+
+        private void OnSetAgentsInFOV(FlockAgent parent, List<FlockAgent> agentsInFOV)
+        {
+            onSetAgentsInFOV?.Invoke(parent, agentsInFOV);
         }
     }
 }

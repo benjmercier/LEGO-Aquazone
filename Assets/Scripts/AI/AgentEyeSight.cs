@@ -23,7 +23,7 @@ namespace LEGOAquazone.Scripts.AI
         private Vector3 _targetVector;
         private float _dotAngle;
         [SerializeField, Range(-1, 1), Tooltip("1 = directly in front, -1 = directly behind")]
-        private float _maxFOV = 0;
+        private float _maxDotProduct = 0;
 
         private void Start()
         {
@@ -44,7 +44,7 @@ namespace LEGOAquazone.Scripts.AI
 
             _dotAngle = Vector3.Dot(_targetVector.normalized, transform.forward);
             
-            return _dotAngle > _maxFOV;
+            return _dotAngle > _maxDotProduct;
         }
     }
 }
