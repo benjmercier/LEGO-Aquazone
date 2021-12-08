@@ -4,11 +4,9 @@ using UnityEngine;
 
 namespace LEGOAquazone.Scripts.Interfaces
 {
-    public interface IAgent<T>
+    public interface IAvoidable
     {
-        T Agent { get; }
-
-        int FlockID { get; set; }
+        // possible avoidance factor float?
     }
 }
 

@@ -46,8 +46,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 701199e19b90dcb49b7dcce0a7bd5436, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _flockAgent: {fileID: 6320256797086730994}
-  _eyesOnAgent: []
+  _agentFOV: 10
+  _agentEyes: []
+  _agentsInViewRadius: []
+  _agentsInFOV: []
+  _obstaclesInViewRadius: []
+  _obstaclesInFOV: []
 --- !u!135 &8452736151718854439
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -72,7 +76,7 @@ GameObject:
   - component: {fileID: 2825756251336580673}
   - component: {fileID: 6320256797086730994}
   - component: {fileID: 6174154848018112791}
-  - component: {fileID: -7911193502622739653}
+  - component: {fileID: 5506707437274934088}
   m_Layer: 0
   m_Name: Fish_MediumAzure
   m_TagString: Untagged
@@ -108,12 +112,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6274f70c2d819d643a515d76811f175f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _agentFOV: 5
-  _agentsInViewRadius: []
-  _agentsInFOV: []
-  _angleOffset: -0.75
-  _renderer: {fileID: 0}
-  _color: {r: 0, g: 0, b: 0, a: 0}
+  _smoothDamp: 1
+  _obstacleAvoidanceVectors:
+  - {x: 1, y: 0, z: 0}
+  - {x: -1, y: 0, z: 0}
+  - {x: 0, y: 1, z: 0}
+  - {x: 0, y: -1, z: 0}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 0}
+  _maxSpeed: 5
+  _maxForce: 0.75
 --- !u!136 &6174154848018112791
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -122,13 +130,13 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2254864096537165402}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.1
   m_Height: 0.65
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: -0.25}
---- !u!54 &-7911193502622739653
+--- !u!54 &5506707437274934088
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -140,7 +148,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -189,7 +197,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _eyeSide: 1
   _eyeRotation: {x: 0, y: 45, z: 0}
-  _maxFOV: 0
+  _maxDotProduct: 0
 --- !u!1 &6424098197604434443
 GameObject:
   m_ObjectHideFlags: 0
@@ -235,7 +243,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _eyeSide: -1
   _eyeRotation: {x: 0, y: 45, z: 0}
-  _maxFOV: 0
+  _maxDotProduct: 0
 --- !u!1 &6942552732416556029
 GameObject:
   m_ObjectHideFlags: 0

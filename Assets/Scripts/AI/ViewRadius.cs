@@ -12,35 +12,27 @@ namespace LEGOAquazone.Scripts.AI
     public class ViewRadius : MonoBehaviour
     {
         [SerializeField]
-        private FlockAgent _flockAgent;
-
-        [SerializeField]
         private float _agentFOV = 5f;
 
         [SerializeField]
         private AgentEyeSight[] _agentEyes;
 
+        [Header("Agents In Range")]
         [SerializeField]
-        private List<FlockAgent> _agentsInViewRadius = new List<FlockAgent>();
+        private List<GameObject> _agentsInViewRadius = new List<GameObject>();
         [SerializeField]
-        private List<FlockAgent> _agentsInFOV = new List<FlockAgent>();
+        private List<GameObject> _agentsInFOV = new List<GameObject>();
+        public List<GameObject> AgentsInFOV { get { return _agentsInFOV; } }
 
-        public static event Action<FlockAgent, List<FlockAgent>> onSetAgentsInFOV;
+        [Header("Obstacles In Range")]
+        [SerializeField]
+        private List<GameObject> _obstaclesInViewRadius = new List<GameObject>();
+        [SerializeField]
+        private List<GameObject> _obstaclesInFOV = new List<GameObject>();
+        public List<GameObject> ObstaclesInFOV { get { return _obstaclesInFOV; } }
 
         private void Awake()
         {
-            if (_flockAgent == null)
-            {
-                if (transform.parent.TryGetComponent(out FlockAgent flockAgent))
-                {
-                    _flockAgent = flockAgent;
-                }
-                else
-                {
-                    Debug.Log("ViewRadius::Awake()::FlockAgent is NULL on " + transform.root.name);
-                }
-            }
-
             _agentEyes = GetComponentsInChildren<AgentEyeSight>();
         }
 
@@ -51,7 +43,8 @@ namespace LEGOAquazone.Scripts.AI
 
         private void Update()
         {
-            CheckFlockAgentsInFOV();
+            CheckObjectsInFOV(_agentsInViewRadius, _agentsInFOV);
+            CheckObjectsInFOV(_obstaclesInViewRadius, _obstaclesInFOV);
         }
 
         private void SetViewRadius(float agentFOV)
@@ -62,92 +55,74 @@ namespace LEGOAquazone.Scripts.AI
 
         private void OnTriggerEnter(Collider other)
         {
-            CheckForFlockAgentInRadius(other, true);
+            IdentifyObjectsInRadius(other.gameObject, true);
         }
 
         private void OnTriggerExit(Collider other)
         {
-            CheckForFlockAgentInRadius(other, false);
+            IdentifyObjectsInRadius(other.gameObject, false);
         }
 
-        private void CheckForFlockAgentInRadius(Collider collider, bool isEntering)
+        private void IdentifyObjectsInRadius(GameObject objInRadius, bool isEntering)
         {
-            if (collider.TryGetComponent(out IAgent<FlockAgent> flockAgent))
+            if (objInRadius.TryGetComponent(out IAgent<FlockAgent> flockAgent))
             {
-                UpdateAgentsInRadius(flockAgent.Agent, isEntering);
+                UpdateObjectsInRadius(objInRadius.gameObject, _agentsInViewRadius, _agentsInFOV, isEntering);
+            }
+            else if (objInRadius.TryGetComponent(out IAvoidable avoidable))
+            {
+                UpdateObjectsInRadius(objInRadius.gameObject, _obstaclesInViewRadius, _obstaclesInFOV, isEntering);
             }
         }
 
-        private void UpdateAgentsInRadius(FlockAgent flockAgent, bool inRadius)
+        private void UpdateObjectsInRadius(GameObject objInRadius, List<GameObject> objInRadiusList, List<GameObject> objInFOVList, bool inRadius)
         {
             if (inRadius)
             {
-                _agentsInViewRadius.Add(flockAgent);
+                objInRadiusList.Add(objInRadius);
             }
             else
             {
-                _agentsInViewRadius.Remove(flockAgent);
+                objInRadiusList.Remove(objInRadius);
 
-                ModifyAgentsInFOV(flockAgent, false);
+                ModifyObjectsInFOV(objInRadius, objInFOVList, false);
             }
         }
 
-        private void CheckFlockAgentsInFOV()
+        private void CheckObjectsInFOV(List<GameObject> objInRadiusList, List<GameObject> objInFOVList)
         {
-            if (_agentsInViewRadius.Any())
+            if (objInRadiusList.Any())
             {
-                _agentsInViewRadius.ForEach(agent =>
+                objInRadiusList.ForEach(obj =>
                 {
-                    if (_agentEyes.Any(eye => eye.CheckIfInEyeFOV(agent.transform.position)))
+                    if (_agentEyes.Any(eye => eye.CheckIfInEyeFOV(obj.transform.position)))
                     {
-                        ModifyAgentsInFOV(agent, true);
+                        ModifyObjectsInFOV(obj, objInFOVList, true);
                     }
                     else
                     {
-                        ModifyAgentsInFOV(agent, false);
+                        ModifyObjectsInFOV(obj, objInFOVList, false);
                     }
                 });
             }
-
-            //if (_agentsInViewRadius.Count > 0)
-            //{
-            //    foreach (var agent in _agentsInViewRadius)
-            //    {
-            //        if (_agentEyes.Any(eye => eye.CheckIfInEyeFOV(agent.transform.position)))
-            //        {
-            //            ModifyAgentsInFOV(agent, true);
-            //        }
-            //        else
-            //        {
-            //            ModifyAgentsInFOV(agent, false);
-            //        }
-            //    }
-            //}
         }
 
-        private void ModifyAgentsInFOV(FlockAgent agent, bool addToList)
+        private void ModifyObjectsInFOV(GameObject objInFOV, List<GameObject> objInFOVList, bool addToList)
         {
             if (addToList)
             {
-                if (!_agentsInFOV.Contains(agent))
+                if (!objInFOVList.Contains(objInFOV))
                 {
-                    _agentsInFOV.Add(agent);
+                    objInFOVList.Add(objInFOV);
                 }
             }
             else
             {
-                if (_agentsInFOV.Contains(agent))
+                if (objInFOVList.Contains(objInFOV))
                 {
-                    _agentsInFOV.Remove(agent);
+                    objInFOVList.Remove(objInFOV);
                 }
             }
-
-            OnSetAgentsInFOV(_flockAgent, _agentsInFOV);
-        }
-
-        private void OnSetAgentsInFOV(FlockAgent parent, List<FlockAgent> agentsInFOV)
-        {
-            onSetAgentsInFOV?.Invoke(parent, agentsInFOV);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace LEGOAquazone.Scripts.AI
         private Vector3 _targetVector;
         private float _dotAngle;
         [SerializeField, Range(-1, 1), Tooltip("1 = directly in front, -1 = directly behind")]
-        private float _maxDotProduct = 0;
+        private float _maxDotProduct = -0.75f;
 
         private void Start()
         {
@@ -38,9 +38,9 @@ namespace LEGOAquazone.Scripts.AI
             transform.localRotation = Quaternion.Euler(_rotationAngle.x, _rotationAngle.y, _rotationAngle.z);
         }
 
-        public bool CheckIfInEyeFOV(Vector3 agentPos)
+        public bool CheckIfInEyeFOV(Vector3 objPos)
         {
-            _targetVector = agentPos - transform.position;
+            _targetVector = objPos - transform.position;
 
             _dotAngle = Vector3.Dot(_targetVector.normalized, transform.forward);
             
