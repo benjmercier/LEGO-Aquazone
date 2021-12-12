@@ -25,13 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 158348543154929904}
-  m_LocalRotation: {x: 6.123234e-17, y: 1, z: -6.123234e-17, w: -3.7493994e-33}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 6.123235e-17, y: 1, z: -0.00000037252897, w: -2.3161054e-23}
+  m_LocalPosition: {x: -2.993834e-23, y: -0.00000022351742, z: -0.000000029802322}
   m_LocalScale: {x: -0.00994651, y: -0.009908458, z: -0.00995635}
   m_Children: []
   m_Father: {fileID: 9014593415654769716}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!33 &1539330115800554728
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -132,6 +132,10 @@ MonoBehaviour:
   _maxForce: 0.25
   _isPrey: 0
   _targetObj: {fileID: 0}
+  _pursuit: 1.5
+  _evade: 1.5
+  _calculateArrival: 0
+  _approachRadius: 2.5
 --- !u!136 &5821102666498716765
 CapsuleCollider:
   m_ObjectHideFlags: 0
