@@ -9,12 +9,34 @@ namespace LEGOAquazone.Scripts.AI.Flocking
     {
         [SerializeField]
         private Flock_new _flock;
+        public Flock_new Flock { get { return _flock; } }
 
         // Spawning
         private GameObject _tempAgent;
         private Vector3 _spawnPos;
         private Quaternion _spawnRot;
         private int _randomIndex;
+
+        [Header("Behavior Weights")]
+        [SerializeField, Range(0f, 10f)]
+        private float _cohesionWeight = 2f;
+        [SerializeField, Range(0f, 10f)]
+        private float _alignmentWeight = 2f;
+        [SerializeField, Range(0f, 10f)]
+        private float _separationWeight = 2f;
+        [SerializeField, Range(0f, 10f)]
+        private float _containmentWeight = 2f;
+        [SerializeField, Range(0f, 10f)]
+        private float _followWeight = 2f;
+        [SerializeField, Range(0f, 10f)]
+        private float _obstacleAvoidanceWeight = 2f;
+
+        public float CohesionWeight { get { return _cohesionWeight; } }
+        public float AlignmentWeight { get { return _alignmentWeight; } }
+        public float SeparationWeight { get { return _separationWeight; } }
+        public float ContainmentWeight { get { return _containmentWeight; } }
+        public float FollowWeight { get { return _followWeight; } }
+        public float ObstacleAvoidanceWeight { get { return _obstacleAvoidanceWeight; } }
 
         private void Start()
         {
@@ -26,6 +48,7 @@ namespace LEGOAquazone.Scripts.AI.Flocking
             MoveAgents();
         }
 
+        // eventually switch to obj pooling
         private void GenerateAgents()
         {
             for (int i = 0; i < _flock.totalAgents; i++)
@@ -43,7 +66,8 @@ namespace LEGOAquazone.Scripts.AI.Flocking
 
                 if (_tempAgent.TryGetComponent(out FlockAgent_new flockAgent))
                 {
-                    flockAgent.GroupIndex = UnityEngine.Random.Range(0, _flock.agentGroups);
+                    flockAgent.GroupIndex = UnityEngine.Random.Range(0, _flock.totalGroups);
+                    flockAgent.FlockController = this;
 
                     _flock.activeAgents.Add(flockAgent);
                 }
@@ -55,6 +79,7 @@ namespace LEGOAquazone.Scripts.AI.Flocking
             foreach (var agent in _flock.activeAgents)
             {
                 // move
+                agent.ApplyForces(_flock.activeAgents);
             }
         }
     }

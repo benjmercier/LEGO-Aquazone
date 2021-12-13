@@ -14,7 +14,7 @@ namespace LEGOAquazone.Scripts.AI.Flocking
         [Space]
         public int totalAgents = 50;
         [Range(0, 5)]
-        public int agentGroups = 3;
+        public int totalGroups = 3;
         public List<FlockAgent_new> agentPrefabs = new List<FlockAgent_new>();
         public List<FlockAgent_new> activeAgents = new List<FlockAgent_new>();
     }

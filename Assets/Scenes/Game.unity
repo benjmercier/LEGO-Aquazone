@@ -2462,11 +2462,17 @@ MonoBehaviour:
     spawnOrigin: {fileID: 1953859972}
     roamingRadius: 10
     totalAgents: 50
-    agentGroups: 3
+    totalGroups: 3
     agentPrefabs:
     - {fileID: 7301176300576521265, guid: b567a8ced07ca4746bb3f5706d334873, type: 3}
     - {fileID: 7206203896017745584, guid: df106e530e449a641931e0e64560cfbc, type: 3}
     activeAgents: []
+  _cohesionWeight: 2
+  _alignmentWeight: 2
+  _separationWeight: 2
+  _containmentWeight: 2
+  _followWeight: 2
+  _obstacleAvoidanceWeight: 2
 --- !u!1 &1780791548
 GameObject:
   m_ObjectHideFlags: 0
