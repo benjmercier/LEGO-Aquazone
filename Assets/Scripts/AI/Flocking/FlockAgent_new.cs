@@ -2,6 +2,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using LEGOAquazone.Scripts.Interfaces;
 
 namespace LEGOAquazone.Scripts.AI.Flocking
 {
@@ -55,6 +56,10 @@ namespace LEGOAquazone.Scripts.AI.Flocking
         private float _leaderAngle = 180f;
         private float _tempAngle;
 
+        private RaycastHit _hitInfo;
+        private LayerMask _layerMask;
+        private Vector3[] _rayDirections;
+
         private void Awake()
         {
             if (TryGetComponent(out Transform transform))
@@ -66,6 +71,13 @@ namespace LEGOAquazone.Scripts.AI.Flocking
             {
                 _agentEyes = this.gameObject.GetComponentsInChildren<AgentEyeSight>();
             }
+
+            _layerMask = LayerMask.GetMask("Obstacle");
+        }
+
+        private void Start()
+        {
+            SetRayDirections();
         }
 
         public void ApplyForces(List<FlockAgent_new> agents)
@@ -84,6 +96,7 @@ namespace LEGOAquazone.Scripts.AI.Flocking
             SetDefaultForce(_separation);
             SetDefaultForce(_containment);
             SetDefaultForce(_follow);
+            SetDefaultForce(_obstacleAvoidance);
 
             _leaderAgent = agents[0];
 
@@ -129,6 +142,14 @@ namespace LEGOAquazone.Scripts.AI.Flocking
             _forceVector += _separation.vector * _flockController.SeparationWeight;// _separation.weight;
             _forceVector += _containment.vector * _flockController.ContainmentWeight;// _containment.weight;
             _forceVector += _follow.vector * _flockController.FollowWeight;
+
+            if (CheckForObstacle())
+            {
+                _obstacleAvoidance.vector = ReturnObstacle();
+
+                _forceVector += _obstacleAvoidance.vector * _flockController.ObstacleAvoidanceWeight;
+            }
+
 
             return _forceVector;
         }
@@ -191,6 +212,61 @@ namespace LEGOAquazone.Scripts.AI.Flocking
 
             return Vector3.zero;
         }
+
+        // obstacles*************************************************
+        private bool CheckForObstacle()
+        {
+            if (Physics.SphereCast(_agentTransform.position, 0.27f, _agentTransform.forward, out _hitInfo, _maxObjDistance, _layerMask))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private void SetRayDirections()
+        {
+            int numDirections = 100;
+            _rayDirections = new Vector3[numDirections];
+
+            float goldenRatio = (1 + Mathf.Sqrt(5)) / 2;
+            float angleIncrement = Mathf.PI * 2 * goldenRatio;
+
+            for (int i = 0; i < numDirections; i++)
+            {
+                float t = (float)i / numDirections;
+                float inclination = Mathf.Acos(1 - 2 * t);
+                float azimuth = angleIncrement * i;
+
+                float x = Mathf.Sin(inclination) * Mathf.Cos(azimuth);
+                float y = Mathf.Sin(inclination) * Mathf.Sin(azimuth);
+                float z = Mathf.Cos(inclination);
+
+                _rayDirections[i] = new Vector3(x, y, z);
+            }
+        }
+
+        private Vector3 ReturnObstacle()
+        {
+            Vector3[] rayDirections = _rayDirections;
+
+            for (int i = 0; i < rayDirections.Length; i++)
+            {
+                Vector3 dir = _agentTransform.TransformDirection(rayDirections[i]);
+                Ray ray = new Ray(_agentTransform.position, dir);
+
+                if (Physics.SphereCast(ray, 0.27f, _maxObjDistance, _layerMask))
+                {
+
+
+                    return -dir;
+                }
+            }
+
+            return _agentTransform.forward;
+        }
+
+        // ********************************************************************
 
         private void SteerAgent(Vector3 steeringTarget)
         {

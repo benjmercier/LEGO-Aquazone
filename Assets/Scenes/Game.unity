@@ -261,13 +261,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 223665104}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ---Environment---
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &223665104
 Transform:
   m_ObjectHideFlags: 0
@@ -407,7 +407,7 @@ GameObject:
   - component: {fileID: 303182869}
   - component: {fileID: 303182868}
   - component: {fileID: 303182871}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (13)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -612,7 +612,7 @@ GameObject:
   - component: {fileID: 371288602}
   - component: {fileID: 371288601}
   - component: {fileID: 371288604}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -720,7 +720,7 @@ GameObject:
   - component: {fileID: 391162118}
   - component: {fileID: 391162117}
   - component: {fileID: 391162120}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (10)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -828,7 +828,7 @@ GameObject:
   - component: {fileID: 394388210}
   - component: {fileID: 394388209}
   - component: {fileID: 394388212}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -936,7 +936,7 @@ GameObject:
   - component: {fileID: 476699253}
   - component: {fileID: 476699252}
   - component: {fileID: 476699255}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1293,7 +1293,7 @@ GameObject:
   - component: {fileID: 679260047}
   - component: {fileID: 679260046}
   - component: {fileID: 679260049}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1617,7 +1617,7 @@ GameObject:
   - component: {fileID: 903218816}
   - component: {fileID: 903218815}
   - component: {fileID: 903218818}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (11)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1725,7 +1725,7 @@ GameObject:
   - component: {fileID: 1027420059}
   - component: {fileID: 1027420058}
   - component: {fileID: 1027420061}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1833,7 +1833,7 @@ GameObject:
   - component: {fileID: 1281923524}
   - component: {fileID: 1281923523}
   - component: {fileID: 1281923526}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2287,7 +2287,7 @@ GameObject:
   - component: {fileID: 1709422925}
   - component: {fileID: 1709422924}
   - component: {fileID: 1709422927}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (12)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2460,7 +2460,7 @@ MonoBehaviour:
   _flock:
     spawnContainer: {fileID: 1953859971}
     spawnOrigin: {fileID: 1953859972}
-    roamingRadius: 10
+    roamingRadius: 15
     totalAgents: 50
     totalGroups: 3
     agentPrefabs:
@@ -2472,7 +2472,7 @@ MonoBehaviour:
   _separationWeight: 2
   _containmentWeight: 2
   _followWeight: 2
-  _obstacleAvoidanceWeight: 2
+  _obstacleAvoidanceWeight: 5
 --- !u!1 &1780791548
 GameObject:
   m_ObjectHideFlags: 0
@@ -2486,7 +2486,7 @@ GameObject:
   - component: {fileID: 1780791551}
   - component: {fileID: 1780791550}
   - component: {fileID: 1780791553}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2726,7 +2726,7 @@ GameObject:
   - component: {fileID: 1862569922}
   - component: {fileID: 1862569921}
   - component: {fileID: 1862569924}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2834,7 +2834,7 @@ GameObject:
   - component: {fileID: 1873176362}
   - component: {fileID: 1873176361}
   - component: {fileID: 1873176364}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3062,7 +3062,7 @@ GameObject:
   - component: {fileID: 2119431318}
   - component: {fileID: 2119431317}
   - component: {fileID: 2119431320}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
