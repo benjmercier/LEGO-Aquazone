@@ -255,11 +255,11 @@ namespace LEGOAquazone.Scripts.AI.Flocking
                 Vector3 dir = _agentTransform.TransformDirection(rayDirections[i]);
                 Ray ray = new Ray(_agentTransform.position, dir);
 
-                if (Physics.SphereCast(ray, 0.27f, _maxObjDistance, _layerMask))
+                if (!Physics.SphereCast(ray, 0.27f, _maxObjDistance, _layerMask))
                 {
 
 
-                    return -dir;
+                    return dir;
                 }
             }
 

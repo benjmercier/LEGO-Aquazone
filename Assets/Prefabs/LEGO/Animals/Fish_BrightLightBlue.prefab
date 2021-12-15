@@ -101,6 +101,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8201830843465711427}
+  - component: {fileID: 6668182154564772409}
   - component: {fileID: 7301176300576521265}
   m_Layer: 0
   m_Name: Fish_BrightLightBlue
@@ -125,7 +126,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7301176300576521265
+--- !u!114 &6668182154564772409
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -133,6 +134,24 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1884268520425565203}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ea1e7f3420739c4ea3aa4a680a96eb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position: {x: 0, y: 0, z: 0}
+  forward: {x: 0, y: 0, z: 0}
+  avgFlockHeading: {x: 0, y: 0, z: 0}
+  avgAvoidanceHeading: {x: 0, y: 0, z: 0}
+  centerOfFlockmates: {x: 0, y: 0, z: 0}
+  numPerceivedFlockmates: 0
+--- !u!114 &7301176300576521265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1884268520425565203}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c537309dc9a8154bac25fe51e04af72, type: 3}
   m_Name: 
@@ -142,26 +161,6 @@ MonoBehaviour:
   _groupIndex: 0
   _minObjDistance: 1.5
   _maxObjDistance: 5
-  _cohesion:
-    vector: {x: 0, y: 0, z: 0}
-    count: 0
-    weight: 2.5
-  _alignment:
-    vector: {x: 0, y: 0, z: 0}
-    count: 0
-    weight: 2.5
-  _separation:
-    vector: {x: 0, y: 0, z: 0}
-    count: 0
-    weight: 1
-  _containment:
-    vector: {x: 0, y: 0, z: 0}
-    count: 0
-    weight: 2
-  _obstacleAvoidance:
-    vector: {x: 0, y: 0, z: 0}
-    count: 0
-    weight: 0
   _agentEyes: []
 --- !u!1 &4147908308335437472
 GameObject:
@@ -178,7 +177,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &727941451584078127
 Transform:
   m_ObjectHideFlags: 0
